@@ -1,0 +1,135 @@
+============================================================
+📘 BLOCKCHAIN TRANSACTION FEES & GAS VALUES (ETHEREUM)
+============================================================
+
+🧩 What Is “Gas”?
+------------------------------------------------------------
+Gas is the unit that measures how much computational work a 
+transaction or smart contract execution needs on the Ethereum 
+blockchain.
+
+Whenever you deploy a contract or call a function, 
+you must pay GAS.
+
+The payment prevents spam and rewards validators 
+who process your transaction.
+
+------------------------------------------------------------
+🧠 KEY TERMS
+------------------------------------------------------------
+
+1. GAS:
+   - A unit of computational effort.
+
+2. GAS PRICE:
+   - How much ETH (in gwei) you are willing to pay per unit of gas.
+
+3. GAS LIMIT:
+   - The maximum amount of gas you’re willing to spend.
+
+4. TRANSACTION FEE:
+   - The actual cost you pay for the transaction.
+   - Formula:
+        Transaction Fee = Gas Used × Gas Price
+
+5. GWEI:
+   - 1 gwei = 0.000000001 ETH
+   - Used to express gas prices easily.
+
+------------------------------------------------------------
+💸 EXAMPLE
+------------------------------------------------------------
+Gas Used     = 50,000
+Gas Price    = 20 gwei
+1 ETH = 1,000,000,000 gwei
+
+Transaction Fee = 50,000 × 20 gwei = 1,000,000 gwei = 0.001 ETH
+
+If 1 ETH = ₹250,000 INR, then
+0.001 ETH = ₹250 INR transaction fee
+
+------------------------------------------------------------
+⚙️ GAS IN YOUR SMART CONTRACTS
+------------------------------------------------------------
+
+1️⃣  BANK.SOL
+------------------------------------------------------------
+| Action             | Function        | Gas Usage | Notes |
+|--------------------|-----------------|------------|--------|
+| Deploy Contract    | constructor()   | High (150k–250k) | Sets owner & balance |
+| Deposit ETH        | deposit()       | Low (21k–50k)    | Adds Ether to balance |
+| Withdraw ETH       | withdraw()      | Medium (40k–70k) | Sends ETH + updates |
+| Show Balance       | showBalance()   | Free (view)      | No blockchain change |
+| Send ETH Directly  | receive()       | ~21,000          | Just receives ETH    |
+
+2️⃣  STUDENT.SOL
+------------------------------------------------------------
+| Action             | Function        | Gas Usage | Notes |
+|--------------------|-----------------|------------|--------|
+| Deploy Contract    | —               | ~200,000   | Initializes storage |
+| Add Student        | addStudent()    | 90k–150k   | Adds struct + mapping |
+| Get Student        | getStudent()    | Free (view)| Reads data only |
+| Total Students     | totalStudents() | Free (view)| Returns array length |
+| Send ETH           | receive()       | 21,000     | Emits event only |
+
+------------------------------------------------------------
+🔍 WHY GAS VARIES
+------------------------------------------------------------
+- Writing to blockchain storage = Expensive
+- Reading data = Cheaper
+- Looping over arrays = More gas
+- Emitting events = Adds some gas
+- ETH transfer = Adds 21,000 base gas
+
+------------------------------------------------------------
+💰 GAS EXAMPLES IN REMIX IDE
+------------------------------------------------------------
+When executing in Remix:
+
+Transaction cost: 45378 gas
+Execution cost: 25134 gas
+
+Meaning:
+- Transaction cost = Base 21,000 + execution gas
+- Execution cost = Real code computation cost
+
+------------------------------------------------------------
+🧾 SUMMARY TABLE
+------------------------------------------------------------
+| Concept           | Meaning |
+|-------------------|------------------------------------------------|
+| Gas               | Computation unit for Ethereum transactions |
+| Gas Price         | Cost per gas unit in gwei |
+| Gas Limit         | Max gas user allows for transaction |
+| Transaction Fee   | Gas Used × Gas Price |
+| Why Pay Gas?      | To pay miners/validators for execution |
+| Free Calls        | view / pure functions (no write to chain) |
+
+------------------------------------------------------------
+⚡ HOW GAS WORKS STEP BY STEP
+------------------------------------------------------------
+1️⃣  You send a transaction with gas limit + gas price
+2️⃣  Ethereum executes your code
+3️⃣  Each operation consumes gas
+4️⃣  When finished, the gas used × gas price = your fee
+5️⃣  If you set too much gas, the unused gas is refunded
+
+------------------------------------------------------------
+💱 PRACTICAL COST ESTIMATE (Example)
+------------------------------------------------------------
+Deploy Bank.sol       : 0.004–0.006 ETH
+Deposit ETH           : 0.001–0.002 ETH
+Withdraw ETH          : 0.001–0.0015 ETH
+Add Student           : 0.0015–0.002 ETH
+Read Data (view func) : 0 ETH (off-chain)
+
+------------------------------------------------------------
+🏁 KEY TAKEAWAYS
+------------------------------------------------------------
+✅ Gas = work done on blockchain
+✅ More storage or loops = higher gas
+✅ Transaction Fee = Gas Used × Gas Price
+✅ Read-only calls are free
+✅ Unused gas is refunded
+✅ Always check “Transaction cost” in Remix for real value
+============================================================

@@ -1,0 +1,327 @@
+============================================================
+📦 PYTHON LIBRARIES USED IN ALL 5 PROJECTS
+============================================================
+
+============================================================
+1️⃣ CORE LIBRARIES (COMMON TO ALL)
+============================================================
+
+1. numpy — Numerical computing (arrays, mathematical ops)
+   • Jupyter:  !pip install numpy
+   • Terminal: pip install numpy
+
+2. pandas — Data manipulation and CSV handling
+   • Jupyter:  !pip install pandas
+   • Terminal: pip install pandas
+
+3. matplotlib — Basic plotting and visualization
+   • Jupyter:  !pip install matplotlib
+   • Terminal: pip install matplotlib
+
+4. seaborn — Advanced plots (boxplot, heatmap, etc.)
+   • Jupyter:  !pip install seaborn
+   • Terminal: pip install seaborn
+
+5. warnings — To suppress unnecessary warnings
+   • Built-in → No installation required
+
+------------------------------------------------------------
+
+
+============================================================
+2️⃣ SCIKIT-LEARN (USED IN MULTIPLE PROJECTS)
+============================================================
+
+1. scikit-learn — Core library for ML algorithms and metrics
+   Used for:
+   - KNN (emails, diabetes)
+   - SVM (emails)
+   - Random Forest, Linear Regression (Uber)
+   - KMeans Clustering (KMeans)
+   - Train-Test Split and Evaluation (All)
+   - Metrics (accuracy, recall, confusion matrix, etc.)
+
+   • Jupyter:  !pip install scikit-learn
+   • Terminal: pip install scikit-learn
+
+   Key Modules:
+   - sklearn.model_selection
+   - sklearn.neighbors
+   - sklearn.metrics
+   - sklearn.cluster
+   - sklearn.ensemble
+   - sklearn.linear_model
+   - sklearn.preprocessing
+
+------------------------------------------------------------
+
+
+============================================================
+3️⃣ TENSORFLOW / KERAS (BANK CHURN)
+============================================================
+
+1. tensorflow — Backend for neural network model
+   • Jupyter:  !pip install tensorflow
+   • Terminal: pip install tensorflow
+
+2. keras — High-level API for building ANN models
+   (Now part of TensorFlow)
+
+   • Jupyter:  !pip install keras
+   • Terminal: pip install keras
+
+   Modules Used:
+   - tensorflow.keras.models.Sequential
+   - tensorflow.keras.layers.Dense, Flatten
+
+------------------------------------------------------------
+
+
+============================================================
+4️⃣ DATA PROCESSING & PREPROCESSING
+============================================================
+
+1. LabelEncoder — Converts categorical values to numeric codes
+   (Used in KMeans and Bank Churn)
+   • Included in scikit-learn
+
+2. StandardScaler — Normalizes/Standardizes numeric data
+   (Used in Bank Churn and KMeans)
+   • Included in scikit-learn
+
+------------------------------------------------------------
+
+
+============================================================
+5️⃣ VISUALIZATION LIBRARIES
+============================================================
+
+1. seaborn — Statistical plots (heatmap, boxplot)
+   • Jupyter:  !pip install seaborn
+   • Terminal: pip install seaborn
+
+2. matplotlib.pyplot — Custom plots and Elbow curve visualization
+   • Jupyter:  !pip install matplotlib
+   • Terminal: pip install matplotlib
+
+------------------------------------------------------------
+
+
+============================================================
+6️⃣ OTHER BUILT-IN MODULES (NO INSTALL NEEDED)
+============================================================
+
+1. datetime — To extract Year, Month, Day, Hour from date (Uber)
+2. math — Used in distance calculations (Uber)
+3. os — Sometimes used for file handling (optional)
+4. sys — For system-level operations (optional)
+5. warnings — To ignore warning messages in output
+
+All built-in → No installation required
+
+------------------------------------------------------------
+
+
+============================================================
+✅ INSTALL ALL USED LIBRARIES (AT ONCE)
+============================================================
+
+▶ JUPYTER NOTEBOOK:
+!pip install numpy pandas matplotlib seaborn scikit-learn tensorflow keras
+
+▶ TERMINAL / CMD:
+pip install numpy pandas matplotlib seaborn scikit-learn tensorflow keras
+
+------------------------------------------------------------
+💡 OPTIONAL (if using label encoding or scaling):
+!pip install imbalanced-learn
+
+------------------------------------------------------------
+
+
+============================================================
+📘 SUMMARY OF LIBRARY PURPOSES
+============================================================
+
+| Library        | Purpose / Functionality |
+|----------------|--------------------------|
+| numpy          | Mathematical operations, arrays |
+| pandas         | DataFrame operations, CSV handling |
+| matplotlib     | Data visualization (basic plotting) |
+| seaborn        | Statistical visualization (boxplots, heatmaps) |
+| scikit-learn   | ML models (KNN, SVM, Regression, KMeans) & evaluation metrics |
+| tensorflow/keras | Build and train Artificial Neural Network (Bank Churn) |
+| datetime       | Date and time processing (Uber) |
+| math           | Mathematical formulas (Haversine distance) |
+| warnings       | Suppress warning messages in Jupyter |
+| StandardScaler | Normalize data for clustering and ANN |
+| LabelEncoder   | Encode categorical text data into numeric form |
+
+------------------------------------------------------------
+
+✅ Covers Libraries Used In:
+- Uber.ipynb → pandas, numpy, seaborn, matplotlib, sklearn
+- emails.ipynb → sklearn (KNN, SVM, metrics)
+- bank_churn.ipynb → pandas, sklearn, tensorflow/keras
+- diabetes.ipynb → pandas, sklearn, numpy
+- KMeans.ipynb → pandas, sklearn, seaborn, matplotlib
+
+------------------------------------------------------------
+📚 END OF LIBRARY INSTALLATION REFERENCE
+============================================================
+
+
+
+
+
+
+Jupyter Notebook installation
+
+
+
+1. System Update and Python Installation:
+It is recommended to update your system and ensure Python 3 is installed, as Jupyter Notebook relies on it.
+Code
+
+sudo apt update && sudo apt upgrade -y
+sudo apt install python3 python3-pip python3-venv -y
+2. Creating and Activating a Virtual Environment (Recommended):
+Using a virtual environment helps manage project dependencies and avoids conflicts with system-wide Python packages.
+Code
+
+mkdir my_jupyter_project
+cd my_jupyter_project
+python3 -m venv jupyter_env
+source jupyter_env/bin/activate
+3. Installing Jupyter Notebook:
+Once your virtual environment is active, install Jupyter Notebook using pip.
+Code
+
+pip install notebook
+4. Launching Jupyter Notebook:
+Navigate to the directory where you want to store your notebooks and launch Jupyter Notebook.
+Code
+
+cd /path/to/your/notebooks_directory # Replace with your actual directory
+jupyter notebook
+This command will open Jupyter Notebook in your default web browser, typically at http://localhost:8888.
+5. Stopping Jupyter Notebook:
+To stop the Jupyter Notebook server, press Ctrl+C in the terminal where it is running. You may need to press it twice to confirm.
+
+
+
+
+
+
+
+Run this instead:
+
+python -m jupyterlab
+
+
+Or, if you want to open the classic notebook:
+
+python -m notebook
+
+
+Both should open Jupyter in your default browser 🎉
+
+
+
+
+
+
+
+
+If error
+When you see this:
+
+jupyter: command not found
+
+
+it means Jupyter is installed, but your system PATH doesn’t include the Python bin directory that holds the jupyter executable.
+
+🐧 Fix Jupyter command on Ubuntu
+🧭 Step 1: Check where Python installed Jupyter
+
+Run:
+
+python3 -m site --user-base
+
+
+You’ll get output like:
+
+/home/yourname/.local
+
+
+Jupyter scripts will be inside:
+
+/home/yourname/.local/bin
+
+⚙️ Step 2: Add it to your PATH
+
+Now add that folder to your PATH environment variable:
+
+echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
+
+
+Then reload your shell:
+
+source ~/.bashrc
+
+
+If you use Zsh (e.g., on Ubuntu 24.04 or if you installed Oh My Zsh):
+
+echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.zshrc
+source ~/.zshrc
+
+🧪 Step 3: Test it
+
+Now try:
+
+jupyter --version
+
+
+If you see version info, you’re good ✅
+To start Jupyter:
+
+jupyter notebook
+
+
+or the newer interface:
+
+jupyter lab
+
+💡 Alternative (No PATH setup needed)
+
+If you don’t want to modify PATH, you can always launch directly with Python:
+
+python3 -m notebook
+
+
+or
+
+python3 -m jupyterlab
+
+
+
+
+
+
+
+
+optional steps
+
+
+
+6. Deactivating the Virtual Environment:
+When you are finished working in the virtual environment, you can deactivate it.
+Code
+
+deactivate
+Additional Useful Commands:
+Installing JupyterLab (alternative to classic Notebook).
+Code
+
+    pip install jupyterlab
+    jupyter lab

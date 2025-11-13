@@ -1,0 +1,322 @@
+============================================================
+1️⃣ FIBONACCI SERIES (fibonacci.py)
+============================================================
+
+🎯 GOAL:
+Compute the n-th Fibonacci number using:
+   • Iterative Dynamic Programming
+   • Recursive approach with caching
+
+------------------------------------------------------------
+📘 MAIN FUNCTIONS
+------------------------------------------------------------
+1. fibonacci_iterative(n)
+2. fibonacci_recursive(n)
+3. helper(n, cache)
+
+------------------------------------------------------------
+⚙️ FUNCTION DESCRIPTIONS
+
+🔹 fibonacci_iterative(n)
+Uses a bottom-up DP list `dp`:
+   dp[i] = dp[i-1] + dp[i-2]
+Returns dp[n-1] (the nth Fibonacci number).
+
+Time: O(n)
+Space: O(n)
+
+🔹 fibonacci_recursive(n)
+Uses recursion with a predefined cache {1:0, 2:1}.
+No updates to cache → behaves like standard recursion.
+
+Time: O(2ⁿ)
+Space: O(n)
+
+------------------------------------------------------------
+💻 EXAMPLE RUN
+Input:
+Enter value of n(nth Fibonacci number): 7
+
+Output:
+Fibonacci Number(Iterative): 8
+Fibonacci Number(Recursive): 8
+
+Explanation:
+Fibonacci sequence = 0, 1, 1, 2, 3, 5, 8
+
+------------------------------------------------------------
+🧠 FUNCTION PURPOSE:
+Demonstrates both iterative DP and recursive Fibonacci computation.
+
+------------------------------------------------------------
+
+
+============================================================
+2️⃣ HUFFMAN ENCODING (huffman_encoding.py)
+============================================================
+
+🎯 GOAL:
+Compress a string using Huffman Encoding — a variable-length,
+lossless compression algorithm based on character frequency.
+
+------------------------------------------------------------
+📘 MAIN CLASSES & FUNCTIONS
+------------------------------------------------------------
+• Node class — defines Huffman tree nodes.
+• Huffman_Encoding class — manages full encoding:
+   - char_frequency()
+   - build_tree()
+   - helper()
+   - huffman_encoding()
+   - print_encoding()
+   - encode()
+
+------------------------------------------------------------
+⚙️ FUNCTION DESCRIPTIONS
+
+🔹 char_frequency()
+Counts each character’s occurrences and creates Node objects.
+
+🔹 build_tree()
+Combines two least frequent nodes repeatedly until one node (root) remains.
+
+🔹 helper(node, binary_str)
+Recursively traverses the tree:
+   Left → "0", Right → "1"
+Stores binary code for each leaf (character).
+
+🔹 print_encoding()
+Prints Huffman codes in a table format.
+
+🔹 encode()
+Executes all steps in sequence.
+
+------------------------------------------------------------
+💻 EXAMPLE RUN
+Input:
+Enter string to be encoded: AAAAAAABBCCCCCCDDDEEEEEEEEE
+
+Output:
+ Char | Huffman code 
+ 'E'  |           1
+ 'A'  |          01
+ 'C'  |         001
+ 'D'  |        0001
+ 'B'  |        0000
+
+Explanation:
+Frequent letters get shorter codes (E=1, A=01).
+
+------------------------------------------------------------
+🧮 COMPLEXITY:
+O(n log n)
+
+------------------------------------------------------------
+🧠 FUNCTION PURPOSE:
+Illustrates greedy compression — the basis for ZIP, JPEG, and MP3 encoding.
+
+------------------------------------------------------------
+
+
+============================================================
+3️⃣ KNAPSACK PROBLEM (knapsack.py)
+============================================================
+
+🎯 GOAL:
+Solve the classical 0/1 Knapsack problem using Dynamic Programming (bottom-up).
+
+------------------------------------------------------------
+📘 MAIN FUNCTION
+------------------------------------------------------------
+knapsack(values, weights, capacity)
+
+------------------------------------------------------------
+⚙️ FUNCTION DESCRIPTION
+
+1️⃣ Create DP table:
+   dp[i][w] = 0 initially, where i = items, w = weight limit.
+
+2️⃣ For each item i and capacity w:
+   If weights[i-1] <= w:
+      dp[i][w] = max(dp[i-1][w],
+                     dp[i-1][w-weights[i-1]] + values[i-1])
+   Else:
+      dp[i][w] = dp[i-1][w]
+
+3️⃣ Return dp[-1][-1] → maximum value possible.
+
+------------------------------------------------------------
+💻 EXAMPLE RUN
+Input:
+Enter number of items: 4
+Enter values of items: 10 40 30 50
+Enter weights of items: 5 4 6 3
+Enter maximum weight: 10
+
+Output:
+The maximum value of items that can be carried: 90
+
+------------------------------------------------------------
+🧮 COMPLEXITY:
+Time: O(n × W)
+Space: O(n × W)
+
+------------------------------------------------------------
+🧠 FUNCTION PURPOSE:
+Dynamic programming optimization — shows how to choose items 
+for maximum profit within weight constraints.
+
+------------------------------------------------------------
+
+
+============================================================
+4️⃣ N-QUEENS PROBLEM (n-queens.py)
+============================================================
+
+🎯 GOAL:
+Place N queens on an N×N chessboard so that no two queens threaten each other.
+
+------------------------------------------------------------
+📘 MAIN CLASS
+------------------------------------------------------------
+NQueens
+   - printBoard()
+   - isSafe(row, col)
+   - set_position_first_queen()
+   - solve(row)
+   - displayMessage()
+
+------------------------------------------------------------
+⚙️ FUNCTION DESCRIPTIONS
+
+🔹 isSafe(row, col)
+Checks same column and both diagonals for existing queens.
+
+🔹 solve(row)
+Recursive backtracking:
+   Try placing a queen column by column.
+   If valid → recurse to next row.
+   If conflict → backtrack.
+
+🔹 displayMessage()
+Shows whether a solution exists.
+
+------------------------------------------------------------
+💻 EXAMPLE RUN
+Input:
+Enter size of chessboard: 4
+Enter row (1-4): 1
+Enter column (1-4): 2
+
+Output:
+X Q X X 
+X X X Q 
+Q X X X 
+X X Q X 
+
+Solution exists for the given position of the queen.
+
+------------------------------------------------------------
+🧮 COMPLEXITY:
+Time: O(N!)
+Space: O(N²)
+
+------------------------------------------------------------
+🧠 FUNCTION PURPOSE:
+Demonstrates backtracking and constraint satisfaction problems.
+
+------------------------------------------------------------
+
+
+============================================================
+5️⃣ 0/1 KNAPSACK (zero_one_knapsack.py)
+============================================================
+
+🎯 GOAL:
+Solve the 0/1 Knapsack problem using DP and identify which items 
+are selected in the optimal solution.
+
+------------------------------------------------------------
+📘 MAIN FUNCTION
+------------------------------------------------------------
+def knapsack_01(n, values, weights, W)
+
+------------------------------------------------------------
+⚙️ FUNCTION DESCRIPTIONS
+
+1️⃣ Initialization
+   dp = [[0] * (W+1) for _ in range(n+1)]
+   → A table of (n+1) rows and (W+1) columns initialized with zeros.
+
+2️⃣ Build DP Table
+   For each item i (1..n) and capacity w (1..W):
+      - If item fits: weights[i-1] <= w
+          dp[i][w] = max(dp[i-1][w],
+                         dp[i-1][w-weights[i-1]] + values[i-1])
+      - Else:
+          dp[i][w] = dp[i-1][w]
+
+3️⃣ Backtrack to find selected items
+   Starting from bottom-right (n, W):
+      - If dp[i][w] != dp[i-1][w]:
+            Add item (i-1) to selected_items
+            Reduce w by weights[i-1]
+   Reverse selected_items to show original order.
+
+4️⃣ Return
+   (dp[n][W], selected_items)
+
+------------------------------------------------------------
+💻 EXAMPLE RUN
+Input:
+n = 3
+values = [60, 100, 120]
+weights = [10, 20, 30]
+W = 50
+
+Output:
+Maximum value: 220
+Selected items: [2, 1]
+
+Explanation:
+Best selection = items 1 and 2 (0-based index):
+→ Total weight = 20 + 30 = 50
+→ Total value = 100 + 120 = 220
+
+------------------------------------------------------------
+🧮 COMPLEXITY:
+Time: O(n × W)
+Space: O(n × W)
+
+------------------------------------------------------------
+🧠 FUNCTION PURPOSE:
+Improved version of 0/1 Knapsack showing:
+- Maximum achievable value
+- Which specific items form that optimal result
+
+This mirrors how optimization solvers or inventory systems
+determine the best combination of limited resources.
+
+------------------------------------------------------------
+
+
+============================================================
+📊 OVERALL SUMMARY
+============================================================
+
+| No | Program Name          | Algorithm Type          | Function Purpose                              | Example Output |
+|----|------------------------|-------------------------|------------------------------------------------|----------------|
+| 1  | fibonacci.py           | DP + Recursion          | Compute nth Fibonacci number                   | 8              |
+| 2  | huffman_encoding.py    | Greedy Tree Encoding    | Encode text via frequency-based Huffman codes  | E→1, A→01 ...  |
+| 3  | knapsack.py            | DP (Tabulation)         | Find max value within weight limit             | 90             |
+| 4  | n-queens.py            | Backtracking            | Place N queens safely on board                 | Valid solution |
+| 5  | zero_one_knapsack.py   | DP with Backtracking    | Maximize value + track chosen items            | 220, [2,1]     |
+
+------------------------------------------------------------
+🧠 KEY CONCEPTS COVERED:
+• Dynamic Programming  
+• Greedy Algorithms  
+• Backtracking Search  
+• Tree Construction & Optimization  
+• Resource Allocation under Constraints
+------------------------------------------------------------

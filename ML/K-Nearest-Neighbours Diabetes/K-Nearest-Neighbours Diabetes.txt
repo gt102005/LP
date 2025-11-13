@@ -1,0 +1,214 @@
+============================================================
+DIABETES PREDICTION USING K-NEAREST NEIGHBORS (KNN)
+============================================================
+
+🎯 GOAL:
+Predict whether a patient has diabetes (1) or not (0) using the
+K-Nearest Neighbors (KNN) algorithm based on medical diagnostic data.
+
+Dataset: diabetes.csv  
+Contains 8 input features (medical measurements) and 1 output label (diabetes outcome).
+
+------------------------------------------------------------
+📘 MAIN FUNCTIONS / LIBRARIES USED
+------------------------------------------------------------
+1. numpy → for numerical operations
+2. pandas → for data manipulation
+3. sklearn.model_selection → to split dataset into train/test sets
+4. sklearn.neighbors → to build KNN model
+5. sklearn.metrics → to evaluate model (accuracy, precision, recall, etc.)
+
+------------------------------------------------------------
+🧮 COMPLETE CODE EXPLANATION
+------------------------------------------------------------
+
+------------------------------------------------------------
+📍 STEP 1: Import Required Libraries
+------------------------------------------------------------
+import numpy as np
+import pandas as pd
+
+✅ Purpose:
+- `numpy` provides mathematical functions and array handling.
+- `pandas` allows reading, cleaning, and processing CSV data.
+
+------------------------------------------------------------
+📍 STEP 2: Load the Dataset
+------------------------------------------------------------
+data = pd.read_csv('./diabetes.csv')
+data.head()
+
+✅ Purpose:
+- Reads the dataset into a DataFrame called `data`.
+- Displays first 5 rows using `.head()` for initial inspection.
+
+✅ Output Example:
+| Pregnancies | Glucose | BP | SkinThickness | Insulin | BMI | DPF | Age | Outcome |
+|--------------|----------|----|---------------|----------|-----|-----|-----|----------|
+| 6 | 148 | 72 | 35 | 0 | 33.6 | 0.627 | 50 | 1 |
+
+------------------------------------------------------------
+📍 STEP 3: Check for Missing Values
+------------------------------------------------------------
+data.isnull().sum()
+
+✅ Purpose:
+- Counts number of NULL or NaN values in each column.
+- Ensures dataset completeness.
+
+✅ Output Example:
+All columns → 0 (no nulls)
+
+------------------------------------------------------------
+📍 STEP 4: Replace Zero Values with Mean
+------------------------------------------------------------
+for column in data.columns[1:-3]:
+    data[column].replace(0, np.nan, inplace=True)
+    data[column].fillna(round(data[column].mean(skipna=True)), inplace=True)
+
+data.head(10)
+
+✅ Purpose:
+- Some columns (like Glucose, BMI, Insulin) cannot realistically be zero.
+- Zeros are replaced with NaN, then filled with column mean.
+- This ensures realistic values and avoids model bias.
+
+✅ Output Example:
+No zero values in Glucose, BP, Insulin, or BMI columns.
+
+------------------------------------------------------------
+📍 STEP 5: Split Features and Target
+------------------------------------------------------------
+X = data.iloc[:, :8]  # Features
+Y = data.iloc[:, 8:]  # Target (Outcome)
+
+✅ Purpose:
+- `X` → Independent variables (medical measurements)
+- `Y` → Dependent variable (0 = No Diabetes, 1 = Diabetes)
+
+------------------------------------------------------------
+📍 STEP 6: Train-Test Split
+------------------------------------------------------------
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
+
+✅ Purpose:
+- Divides dataset into 80% training and 20% testing.
+- Ensures unbiased model evaluation.
+
+✅ Output Example:
+Training size: 614 samples  
+Testing size: 154 samples
+
+------------------------------------------------------------
+📍 STEP 7: Train K-Nearest Neighbors (KNN) Model
+------------------------------------------------------------
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier()
+knn_fit = knn.fit(X_train, Y_train.values.ravel())
+knn_pred = knn_fit.predict(X_test)
+
+✅ Purpose:
+- Initializes KNN with default parameters (k = 5 neighbors).
+- Trains (`fit`) the model using the training data.
+- Predicts outcomes (`predict`) on test data.
+
+✅ How KNN Works:
+- For each test data point:
+  - Calculates Euclidean distance to all training samples.
+  - Selects the 5 nearest neighbors.
+  - Assigns the majority class label among those neighbors.
+
+------------------------------------------------------------
+📍 STEP 8: Evaluate Model Performance
+------------------------------------------------------------
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, accuracy_score
+print("Confusion Matrix")
+print(confusion_matrix(Y_test, knn_pred))
+print("Accuracy Score:", accuracy_score(Y_test, knn_pred))
+print("Recall Score:", recall_score(Y_test, knn_pred))
+print("F1 Score:", f1_score(Y_test, knn_pred))
+print("Precision Score:", precision_score(Y_test, knn_pred))
+
+✅ Purpose:
+- Calculates and prints essential evaluation metrics:
+  - **Confusion Matrix:** Compares true vs. predicted labels.
+  - **Accuracy:** Correct predictions / Total predictions.
+  - **Precision:** % of predicted positives that were correct.
+  - **Recall (Sensitivity):** % of actual positives identified.
+  - **F1 Score:** Harmonic mean of precision and recall.
+
+✅ Example Output:
+Confusion Matrix:
+[[96 11]
+ [28 59]]
+Accuracy Score: 0.83
+Recall Score: 0.68
+F1 Score: 0.75
+Precision Score: 0.84
+
+✅ Interpretation:
+- Out of 154 test cases:
+  - 96 true negatives, 59 true positives
+  - 11 false positives, 28 false negatives
+- Model is 83% accurate in predicting diabetes.
+- Precision = 0.84 (good balance between false positives and negatives).
+
+------------------------------------------------------------
+📊 METRIC DEFINITIONS
+------------------------------------------------------------
+1. **Confusion Matrix:**
+   [[TN, FP],
+    [FN, TP]]
+   - TN = Correctly predicted non-diabetic
+   - TP = Correctly predicted diabetic
+   - FP = Normal predicted as diabetic
+   - FN = Diabetic predicted as normal
+
+2. **Accuracy = (TP + TN) / Total**
+3. **Precision = TP / (TP + FP)**
+4. **Recall = TP / (TP + FN)**
+5. **F1 Score = 2 * (Precision * Recall) / (Precision + Recall)**
+
+------------------------------------------------------------
+🧠 FUNCTION PURPOSE SUMMARY
+------------------------------------------------------------
+| Function / Method | Purpose |
+|--------------------|----------|
+| `pd.read_csv()` | Load dataset |
+| `.isnull().sum()` | Check missing values |
+| `.replace()` | Replace invalid values |
+| `.fillna()` | Fill NaN with mean |
+| `train_test_split()` | Split data into train/test |
+| `KNeighborsClassifier()` | Initialize KNN model |
+| `.fit()` | Train model |
+| `.predict()` | Make predictions |
+| `confusion_matrix()` | Evaluate predictions |
+| `accuracy_score()` | Calculate model accuracy |
+| `precision_score()` | Compute precision metric |
+| `recall_score()` | Compute recall metric |
+| `f1_score()` | Combine precision and recall |
+
+------------------------------------------------------------
+✅ FINAL OUTPUT SUMMARY
+------------------------------------------------------------
+• Dataset cleaned and preprocessed  
+• KNN model trained successfully  
+• Model performance evaluated with multiple metrics  
+
+Example Output Recap:
+------------------------------------------------------------
+Confusion Matrix:
+[[96 11]
+ [28 59]]
+Accuracy Score: 0.83
+Recall Score: 0.68
+F1 Score: 0.75
+Precision Score: 0.84
+------------------------------------------------------------
+
+🧠 FINAL INSIGHT:
+KNN achieves good overall accuracy for medical data classification.
+It is simple and interpretable but can be computationally expensive
+on large datasets due to distance calculations for every test sample.
+------------------------------------------------------------

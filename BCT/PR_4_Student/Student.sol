@@ -1,0 +1,60 @@
+    // SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.19;
+
+    /// @title Student storage demo - structs, arrays, fallback/receive
+    contract StudentStorage {
+        struct Student {
+            uint256 id;
+            string name;
+            uint8 age;
+            string[] courses;
+            address studentAddress;
+        }
+
+        Student[] public students;
+        mapping(uint256 => uint256) private idToIndex; // map id -> index+1 (0 means missing)
+        event StudentAdded(uint256 indexed id, string name, address indexed who);
+        event FundsReceived(address indexed from, uint256 amount);
+
+        /// @notice Add a student (push to array)
+        function addStudent(uint256 _id, string calldata _name, uint8 _age, string[] calldata _courses) external {
+            require(_id != 0, "id cannot be 0");
+            require(idToIndex[_id] == 0, "Student id exists");
+            string[] memory coursesMem = new string[](_courses.length);
+            for (uint i = 0; i < _courses.length; i++) {
+                coursesMem[i] = _courses[i];
+            }
+            students.push(Student({
+                id: _id,
+                name: _name,
+                age: _age,
+                courses: coursesMem,
+                studentAddress: msg.sender
+            }));
+            idToIndex[_id] = students.length; // index + 1
+            emit StudentAdded(_id, _name, msg.sender);
+        }
+
+        /// @notice Get total number of students
+        function totalStudents() external view returns (uint256) {
+            return students.length;
+        }
+
+        /// @notice Get student by id; returns tuple (id, name, age, courses, address)
+        function getStudent(uint256 _id) external view returns (uint256, string memory, uint8, string[] memory, address) {
+            uint256 idx = idToIndex[_id];
+            require(idx != 0, "Student not found");
+            Student storage s = students[idx - 1];
+            return (s.id, s.name, s.age, s.courses, s.studentAddress);
+        }
+
+        // Allow contract to receive ETH for demonstration; capture and emit event
+        receive() external payable {
+            emit FundsReceived(msg.sender, msg.value);
+        }
+
+        // fallback also accepts funds (and doesn't revert)
+        fallback() external payable {
+            emit FundsReceived(msg.sender, msg.value);
+        }
+    }

@@ -1,0 +1,242 @@
+🧩 1. Import Libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+Explanation:
+
+pandas: handles loading and cleaning the email dataset.
+
+matplotlib.pyplot and seaborn: used for plotting graphs.
+
+✅ Output: None (library imports only).
+
+📥 2. Load the Dataset
+df = pd.read_csv('emails.csv')
+df.head()
+
+
+Explanation:
+
+Loads the emails dataset into a DataFrame named df.
+
+df.head() shows the first 5 rows.
+
+✅ Output: A small table (first few rows).
+Typical columns (depends on dataset):
+
+Email_ID | Text/Subject/Body | Word_freq_xxx ... | Spam
+
+
+The last column (Spam or label) is usually 0 (not spam) or 1 (spam).
+
+🔍 3. Check for Missing Values
+df.isnull().sum()
+
+
+Explanation:
+
+Checks how many missing (NaN) values exist in each column.
+
+✅ Output Example:
+
+word_freq_make         0
+word_freq_address      0
+word_freq_all          0
+char_freq_$            0
+char_freq_!            0
+capital_run_length     0
+Spam                   0
+dtype: int64
+
+
+If you get 0 for all columns → dataset is already clean.
+
+🧹 4. Drop Any Null Rows
+df.dropna(how='any', inplace=True)
+
+
+Explanation:
+
+Removes rows that have any missing value (for safety).
+
+✅ Output: None — the dataset becomes cleaner.
+
+🎯 5. Define Features and Labels
+x = df.iloc[:, 1:-1].values
+y = df.iloc[:, -1].values
+
+
+Explanation:
+
+x: all columns except the first (id column) and the last (label column).
+→ Represents the email features.
+
+y: last column (target variable), i.e., spam or not spam.
+
+✅ Output: None, but:
+
+x.shape → (N, M) where N = emails, M = features
+
+y.shape → (N,) labels (0 or 1)
+
+✂️ 6. Split Data into Train/Test Sets
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=10)
+
+
+Explanation:
+
+75% of the data → training, 25% → testing.
+
+random_state=10 ensures reproducibility.
+
+✅ Output: None (creates the 4 sets).
+
+🧾 7. Define Evaluation Function
+from sklearn.metrics import (
+    ConfusionMatrixDisplay, confusion_matrix,
+    accuracy_score, precision_score, recall_score,
+    PrecisionRecallDisplay, RocCurveDisplay
+)
+
+def report(classifier):
+    y_pred = classifier.predict(x_test)
+    print(f"Accuracy:  {accuracy_score(y_test, y_pred)}")
+    print(f"Precision Score:  {precision_score(y_test, y_pred)}")
+    print(f"Recall Score:  {recall_score(y_test, y_pred)}")
+
+    PrecisionRecallDisplay.from_estimator(classifier, x_test, y_test)
+    RocCurveDisplay.from_estimator(classifier, x_test, y_test)
+
+    ConfusionMatrixDisplay(confusion_matrix(y_test, y_pred)).plot()
+
+
+Explanation:
+This function:
+
+Predicts on test data.
+
+Prints:
+
+Accuracy = correctly predicted emails / total
+
+Precision = % of predicted spam that were actually spam
+
+Recall = % of actual spam that were correctly detected
+
+Draws:
+
+Precision-Recall curve
+
+ROC curve
+
+Confusion matrix
+
+✅ Output Example:
+
+Accuracy:  0.932
+Precision Score:  0.90
+Recall Score:  0.91
+
+
+And you’ll see 3 plots appear:
+
+Precision-Recall curve
+
+ROC curve
+
+Confusion matrix
+
+🤖 8. Import and Initialize KNN Model
+from sklearn.neighbors import KNeighborsClassifier
+
+
+Explanation:
+Imports K-Nearest Neighbors, a distance-based classifier.
+
+✅ Output: None.
+
+⚙️ 9. Train KNN Model
+kNN = KNeighborsClassifier(n_neighbors=10)
+kNN.fit(x_train, y_train)
+
+
+Explanation:
+
+Creates KNN with 10 nearest neighbors.
+
+Fits (trains) it on training data.
+
+✅ Output: None (model trained successfully).
+
+📊 10. Evaluate KNN
+report(kNN)
+
+
+Explanation:
+
+Runs the report() function on the trained model.
+
+Shows performance metrics and plots.
+
+✅ Output Example:
+
+Accuracy:  0.88
+Precision Score:  0.84
+Recall Score:  0.81
+
+
+Plus the ROC, Precision-Recall, and Confusion Matrix plots.
+
+🧠 11. Train Support Vector Machine (SVM)
+from sklearn.svm import SVC
+svm = SVC(gamma='auto', random_state=10)
+svm.fit(x_train, y_train)
+
+
+Explanation:
+
+Imports Support Vector Classifier (SVM).
+
+Uses an RBF kernel (gamma='auto').
+
+Fits it on the training data.
+
+✅ Output: None (model trained).
+
+📈 12. Evaluate SVM
+report(svm)
+
+
+Explanation:
+
+Evaluates SVM on test data using same metrics.
+
+✅ Output Example:
+
+Accuracy:  0.97
+Precision Score:  0.95
+Recall Score:  0.94
+
+
+Usually, SVM performs better than KNN in text classification.
+
+You’ll again see:
+
+ROC curve
+
+Precision-Recall curve
+
+Confusion matrix
+
+🧾 Summary of Notebook Functionality
+Step	Purpose	Output
+1	Import libraries	None
+2	Load dataset	First few rows
+3–4	Clean data	Nulls removed
+5–6	Split features & data	Training & testing sets
+7	Define metrics	Function for model evaluation
+8–10	KNN training & testing	Accuracy, precision, recall, plots
+11–12	SVM training & testing	Better performance, similar plots

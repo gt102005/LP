@@ -1,0 +1,231 @@
+Let’s go through each cell in detail — explaining the code, what it does, and what output you’ll see.
+
+🧩 1. Importing Libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import datetime as dt
+
+
+Explanation:
+
+pandas: handles data loading and manipulation.
+
+matplotlib.pyplot and seaborn: used for plotting.
+
+datetime: helps with date-time operations.
+
+✅ Output: None — just imports.
+
+🧮 2. Load the Dataset
+df = pd.read_csv("uber.csv")
+df.head()
+
+
+Explanation:
+
+Loads the dataset into a pandas DataFrame called df.
+
+df.head() shows the first 5 rows.
+
+✅ Output: A preview of 5 rows showing columns like:
+
+Unnamed: 0 | key | fare_amount | pickup_datetime | pickup_longitude | pickup_latitude | dropoff_longitude | dropoff_latitude | passenger_count
+
+🧹 3. Drop Unnecessary Columns
+df.drop(columns=['Unnamed: 0', 'key'], inplace=True)
+
+
+Explanation:
+
+Removes two unnecessary columns: an index column (Unnamed: 0) and a redundant key.
+
+✅ Output: None (inplace operation).
+
+🔍 4. Check Data Info
+df.info()
+
+
+Explanation:
+
+Displays column names, data types, and missing value counts.
+
+✅ Output Example:
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 50000 entries, 0 to 49999
+Data columns (total 7 columns):
+fare_amount         float64
+pickup_datetime     object
+pickup_longitude    float64
+pickup_latitude     float64
+dropoff_longitude   float64
+dropoff_latitude    float64
+passenger_count     int64
+
+🚫 5. Remove Missing Data
+df.dropna(how='any', inplace=True)
+
+
+Explanation:
+
+Drops all rows that contain any missing values.
+
+✅ Output: None — but dataset becomes smaller.
+
+🧭 6. Check for Nulls Again
+df.isnull().sum()
+
+
+Explanation:
+
+Counts nulls column-wise.
+
+✅ Output:
+
+fare_amount         0
+pickup_datetime     0
+pickup_longitude    0
+pickup_latitude     0
+dropoff_longitude   0
+dropoff_latitude    0
+passenger_count     0
+dtype: int64
+
+📊 7. Boxplots for Outlier Detection
+for col in df.select_dtypes(exclude=['object']):
+    plt.figure()
+    sns.boxplot(data=df, x=col)
+
+
+Explanation:
+
+Iterates over numeric columns and creates boxplots to visualize outliers.
+
+✅ Output: Multiple boxplots — one each for numeric columns (fare_amount, pickup_latitude, etc.).
+
+🚦 8. Filter Out Invalid Geographic and Fare Values
+df = df[
+    (df.pickup_latitude > -90) & (df.pickup_latitude < 90) &
+    (df.dropoff_latitude > -90) & (df.dropoff_latitude < 90) &
+    (df.pickup_longitude > -180) & (df.pickup_longitude < 180) &
+    (df.dropoff_longitude > -180) & (df.dropoff_longitude < 180) &
+    (df.fare_amount > 0) & (df.passenger_count > 0) & (df.passenger_count < 50)
+]
+
+
+Explanation:
+
+Removes entries with impossible coordinates, negative fares, or invalid passenger counts.
+
+✅ Output: None, but dataset becomes smaller.
+
+🌍 9. Define a Distance Function
+from math import cos, asin, sqrt, pi
+import numpy as np
+
+def distance(lat_1, lon_1, lat_2, lon_2):
+    lon_1, lon_2, lat_1, lat_2 = map(np.radians, [lon_1, lon_2, lat_1, lat_2])
+    diff_lon = lon_2 - lon_1
+    diff_lat = lat_2 - lat_1
+    km = 2 * 6371 * np.arcsin(np.sqrt(
+        np.sin(diff_lat / 2.0)**2 +
+        np.cos(lat_1) * np.cos(lat_2) * np.sin(diff_lon / 2.0)**2))
+    return km
+
+
+Explanation:
+
+Implements the Haversine formula to calculate the distance (in km) between two lat/long points on Earth.
+
+✅ Output: Function defined (no visible output).
+
+📏 10. Compute Distance for Each Row
+temp = distance(df['pickup_latitude'], df['pickup_longitude'],
+                df['dropoff_latitude'], df['dropoff_longitude'])
+temp.head()
+
+
+Explanation:
+
+Calculates a NumPy Series of distances for every ride.
+
+temp.head() shows first 5 computed distances.
+
+✅ Output Example:
+
+0     3.24
+1     1.57
+2    12.86
+3     0.89
+4    35.45
+dtype: float64
+
+🧮 11. Add Distance to Dataset
+df_new = df.copy()
+df_new['Distance'] = temp
+df = df_new
+df.head()
+
+
+Explanation:
+
+Adds a new column Distance to the dataset.
+
+Displays first 5 rows with this new column.
+
+✅ Output: Same as earlier, now includes Distance.
+
+📊 12. Check Distance Outliers
+sns.boxplot(data=df, x='Distance')
+
+
+Explanation:
+
+Plots a boxplot for distances to visualize outliers (very long rides).
+
+✅ Output: Boxplot — likely shows a few extreme distances.
+
+🚧 13. Remove Unrealistic Distances
+df = df[(df['Distance'] < 200) & (df['Distance'] > 0)]
+
+
+Explanation:
+
+Removes unrealistic rides — more than 200 km or 0 km distance.
+
+✅ Output: None — cleansed data.
+
+🕒 14. Convert Pickup Datetime
+df['pickup_datetime'] = pd.to_datetime(df['pickup_datetime'])
+
+
+Explanation:
+
+Converts date-time from string to datetime object for analysis.
+
+✅ Output: None — internal datatype change.
+
+📅 15. Extract Date/Time Features
+df['week_day'] = df['pickup_datetime'].dt.day_name()
+df['Year'] = df['pickup_datetime'].dt.year
+df['Month'] = df['pickup_datetime'].dt.month
+df['hour'] = df['pickup_datetime'].dt.hour
+df.head()
+
+
+Explanation:
+
+Creates new columns for:
+
+week_day: day name (Monday, Tuesday…)
+
+Year: numeric year
+
+Month: numeric month
+
+hour: hour of the day
+
+Displays the updated DataFrame.
+
+✅ Output: DataFrame with new time-based columns.

@@ -1,0 +1,318 @@
+Let’s go through it step-by-step, explaining the code, logic, and expected outputs clearly 👇
+
+🧩 1. Import Libraries
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import tensorflow as tf
+
+
+Explanation:
+
+pandas, numpy: Data loading and processing.
+
+seaborn, matplotlib: Visualization.
+
+tensorflow: For building the neural network model.
+
+✅ Output: None (imports only).
+
+📥 2. Load the Dataset
+df = pd.read_csv('Churn_Modelling.csv')
+df.head()
+
+
+Explanation:
+
+Loads the bank churn dataset.
+
+df.head() displays the first 5 rows.
+
+✅ Output:
+A preview like this 👇
+
+RowNumber	CustomerId	Surname	CreditScore	Geography	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary	Exited
+1	15634602	Hargrave	619	France	Female	42	2	0.00	1	1	1	101348.88	1
+...	...	...	...	...	...	...	...	...	...	...	...	...	...
+🔍 3. Dataset Info
+df.info()
+
+
+Explanation:
+
+Prints data types, non-null counts, and memory usage.
+
+✅ Output:
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 10000 entries, 0 to 9999
+Data columns (total 14 columns):
+...
+dtypes: float64(3), int64(6), object(5)
+
+📊 4. Visualize Target Distribution
+plt.xlabel('Exited')
+plt.ylabel('Count')
+df['Exited'].value_counts().plot.bar()
+plt.show()
+
+
+Explanation:
+
+Shows how many customers exited (1) vs stayed (0).
+
+Usually, churners are fewer → imbalanced dataset.
+
+✅ Output: A bar chart showing counts of 0 (non-churn) vs 1 (churn).
+
+🌍 5. Check Geography Counts
+df['Geography'].value_counts()
+
+
+Explanation:
+
+Displays count of customers from each country.
+
+✅ Output Example:
+
+France     5014
+Germany    2509
+Spain      2477
+
+🧱 6. One-Hot Encode Geography
+df = pd.concat([df, pd.get_dummies(df['Geography'], prefix='Geo')], axis=1)
+
+
+Explanation:
+
+Converts the Geography column (France, Spain, Germany) into 3 numeric columns:
+
+Geo_France, Geo_Spain, Geo_Germany
+
+Helps the model use categorical data.
+
+✅ Output: None — DataFrame updated.
+
+👩‍🦰 7. One-Hot Encode Gender
+df = pd.concat([df, pd.get_dummies(df['Gender'])], axis=1)
+
+
+Explanation:
+
+Adds two columns: Female and Male.
+
+✅ Output: None — new columns added.
+
+🧾 8. Check Updated Dataset
+df.info()
+
+
+Explanation:
+
+Now shows additional dummy variables and fewer categorical columns.
+
+✅ Output:
+
+...
+Geo_France       10000 non-null
+Geo_Germany      10000 non-null
+Geo_Spain        10000 non-null
+Female           10000 non-null
+Male             10000 non-null
+
+🧹 9. Drop Unnecessary Columns
+df.drop(columns=['RowNumber','CustomerId','Surname','Geography','Gender'], inplace=True)
+
+
+Explanation:
+
+Removes irrelevant or redundant columns that don’t help prediction.
+
+✅ Output: None (in-place operation).
+
+👀 10. Preview Cleaned Data
+df.head()
+
+
+✅ Output:
+Data now contains only numeric columns — ready for model training.
+
+🎯 11. Split into Features (X) and Target (y)
+y = df['Exited'].values
+x = df.loc[:, df.columns != 'Exited'].values
+
+
+Explanation:
+
+y: target column (Exited) — 1 for churn, 0 for stay.
+
+x: all other columns (independent features).
+
+✅ Output: None, but:
+
+x.shape → (10000, 13)
+
+y.shape → (10000,)
+
+🧪 12. Train-Test Split
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=20, test_size=0.25)
+
+
+Explanation:
+
+75% training, 25% testing split.
+
+✅ Output: None — creates 4 datasets.
+
+⚖️ 13. Normalize the Features
+from sklearn.preprocessing import StandardScaler
+std_x = StandardScaler()
+x_train = std_x.fit_transform(x_train)
+x_test = std_x.transform(x_test)
+
+
+Explanation:
+
+Standardizes the numeric features to mean = 0, std = 1.
+
+Essential for neural network convergence.
+
+✅ Output: None — scaled arrays.
+
+📐 14. Check Shape
+x_train.shape
+
+
+✅ Output:
+
+(7500, 13)
+
+
+13 features per sample.
+
+🧠 15. Define Neural Network (ANN)
+import tensorflow as tf
+from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.models import Sequential
+
+model = Sequential()
+model.add(Flatten(input_shape=(13,)))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+
+
+Explanation:
+
+Flatten: ensures input shape = 13.
+
+Dense(100, relu): 1 hidden layer with 100 neurons.
+
+Dense(1, sigmoid): output layer for binary classification (0/1).
+
+✅ Output: Model summary (if you call model.summary()).
+
+⚙️ 16. Compile Model
+model.compile(optimizer='adam', metrics=['accuracy'], loss='BinaryCrossentropy')
+
+
+Explanation:
+
+optimizer='adam': efficient gradient descent.
+
+loss='BinaryCrossentropy': suited for binary classification.
+
+metrics=['accuracy']: tracks accuracy during training.
+
+✅ Output: None.
+
+🏋️ 17. Train the Model
+model.fit(x_train, y_train, batch_size=64, validation_split=0.1, epochs=100)
+
+
+Explanation:
+
+Trains for 100 epochs with mini-batches of 64 samples.
+
+10% of training data is used for validation.
+
+✅ Output:
+Training logs per epoch:
+
+Epoch 1/100
+...
+val_accuracy: 0.86
+
+
+You’ll see accuracy improve and stabilize around 0.85–0.87.
+
+🔮 18. Make Predictions
+pred = model.predict(x_test)
+
+
+Explanation:
+
+Predicts probabilities (values between 0 and 1) for each test sample.
+
+✅ Output Example:
+
+array([[0.032], [0.87], [0.45], ...])
+
+🔢 19. Convert Probabilities to Classes
+y_pred = []
+for val in pred:
+    if val > 0.5:
+        y_pred.append(1)
+    else:
+        y_pred.append(0)
+
+
+Explanation:
+
+Converts predicted probabilities into binary labels:
+
+0.5 → churn (1)
+
+≤ 0.5 → not churn (0)
+
+✅ Output: None — creates list of 0/1 predictions.
+
+📊 20. Evaluate Model
+from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
+
+
+Then you’d typically add:
+
+acc = accuracy_score(y_test, y_pred)
+print("Accuracy:", acc)
+cm = confusion_matrix(y_test, y_pred)
+ConfusionMatrixDisplay(cm).plot()
+
+
+Explanation:
+
+accuracy_score → overall performance
+
+confusion_matrix → counts of TP, TN, FP, FN
+
+ConfusionMatrixDisplay → visualization
+
+✅ Output Example:
+
+Accuracy: 0.86
+
+
+Confusion matrix plot:
+
+	Predicted 0	Predicted 1
+Actual 0	1900	100
+Actual 1	250	250
+✅ Final Summary
+Step	Purpose	Output
+1–3	Load & inspect dataset	Basic info
+4–7	Visualize & encode categorical data	Dummy variables created
+8–10	Drop unused cols	Clean numeric dataset
+11–13	Split & scale data	Ready for model
+15–17	Build & train ANN	Model learns to classify churn
+18–20	Predict & evaluate	Accuracy ~85–87%, Confusion Matrix plot
